@@ -3,16 +3,16 @@
 {% block content %}
 
     <div class="header">
-      <h2>My To Do List</h2>
+      <h2 class="text-style">My To Do List</h2>
       <form method="POST" action="{{path('create_task')}}">
-        <input name="task-title" type="text" id="myInput" placeholder="Task title..." />
-        <button type="submit" class="addBtn">Add a task</button>
+        <input name="task-title" type="text" id="myInput" placeholder="To be done...." />
+        <button type="submit" class="addBtn">Add</button>
       </form>
     </div>
 
     <ul>
      {% for task in tasks %}
-      <li {% if (task.status) %}  class="checked" {% endif %} >
+      <li {% if (task.status) %}  class="checked" {% endif %} class="single-item" >
         <a href="{{path('edit_task',{'id': task.id})}}"> <span class="task-list-item"> {{task.title}} </span> </a
         ><a onclick="return confirm('Are you sure to delete?')" href="{{path('delete_task',{'id': task.id})}}"><span class="close">X</span></a>
       </li>

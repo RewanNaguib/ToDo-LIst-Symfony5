@@ -21,6 +21,8 @@ class TodoListController extends AbstractController
     }
 
 
+
+
     /**
      * @Route("/createtodolist", name="create_task" , methods="POST")
      */
@@ -28,23 +30,26 @@ class TodoListController extends AbstractController
     {
       $title = trim($request->request->get("task-title"));
 
-      if(empty($title))
-        {  
-            return $this->redirectToRoute('getall_tasks');
-        }
+        if(empty($title))
+            {  
+                return $this->redirectToRoute('getall_tasks');
+            }
  
 
-    else 
-        {
-            $entityManager = $this->getDoctrine()->getManager();
-            $task = new Task();
-            $task->setTitle($title);
-            $entityManager->persist($task);
-            $entityManager->flush();
-            return $this->redirectToRoute('getall_tasks');
-        }
+        else 
+            {
+                $entityManager = $this->getDoctrine()->getManager();
+                $task = new Task();
+                $task->setTitle($title);
+                $entityManager->persist($task);
+                $entityManager->flush();
+                return $this->redirectToRoute('getall_tasks');
+            }
       
     }
+
+
+
 
 
     /**
@@ -52,18 +57,37 @@ class TodoListController extends AbstractController
      */
     public function edit($id)
     {
-        // return $this->render('todo_list/index.html.twig');
-        exit('this edit task' . $id);
+       $entityManager = $this->getDoctrine()->getManager();
+       $task = $entityManager->getRepository(Task::class)->find($id);
+       $task->setStatus(! $task->getStatus());
+       $entityManager->flush();
+       return $this->redirectToRoute('getall_tasks');
     }
 
 
-
+// Type hinting method
     /**
      * @Route("/deletetodolist/{id}", name="delete_task")
      */
-    public function delete($id)
+    public function delete(Task $task)
     {
-        // return $this->render('todo_list/index.html.twig');
-        exit('this delete task' .$id);
+     $entityManager=$this->getDoctrine()->getManager();
+     $entityManager->remove($task);
+     $entityManager->flush();
+     return $this->redirectToRoute('getall_tasks');
     }
+
+
+// OR Normal method
+    // /**
+    //  * @Route("/deletetodolist/{id}", name="delete_task")
+    //  */
+    // public function delete($id)
+    // {
+    //  $entityManager=$this->getDoctrine()->getManager();
+    //  $task = $entityManager->getRepository(Task::class)->find($id);
+    //  $entityManager->remove($task);
+    //  $entityManager->flush();
+    //  return $this->redirectToRoute('getall_tasks');
+    // }
 }
